@@ -7,7 +7,7 @@ data:
   JWT_SECRET: helloworld
   POSTGRESS_DB: udgram_sasuke_dev
   POSTGRESS_HOST: udgram-sasuke-dev.c51nkidleq97.us-east-2.rds.amazonaws.com
-  URL: http://localhost:8100  
+  URL: http://a1d7f28d497b5443699ae378bb8fd9c0-1487269046.eu-west-3.elb.amazonaws.com
 metadata:
   name: env-config
   

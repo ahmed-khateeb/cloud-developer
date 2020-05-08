@@ -15,7 +15,7 @@ spec:
         service: backend-feed
     spec:
       containers:
-      - image: ahmadelkhateeb/udacity-rest-feed
+      - image: docker.io/ahmadelkhateeb/udacity-rest-feed
         name: backend-feed
         imagePullPolicy: Always  
         resources:

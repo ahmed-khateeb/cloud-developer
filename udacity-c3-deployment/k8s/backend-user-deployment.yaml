@@ -15,7 +15,7 @@ spec:
         service: backend-user
     spec:
       containers:
-      - image: ahmadelkhateeb/udacity-rest-user
+      - image: docker.io/ahmadelkhateeb/udacity-rest-user
         name: backend-user 
         imagePullPolicy: Always  
         resources:
