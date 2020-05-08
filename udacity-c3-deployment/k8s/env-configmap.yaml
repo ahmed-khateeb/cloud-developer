@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+data:
+  AWS_BUCKET: udgram-sasuke
+  AWS_PROFILE: default_
+  AWS_REGION: us-east-2
+  JWT_SECRET: helloworld
+  POSTGRESS_DB: udgram_sasuke_dev
+  POSTGRESS_HOST: udgram-sasuke-dev.c51nkidleq97.us-east-2.rds.amazonaws.com
+  URL: http://localhost:8100  
+metadata:
+  name: env-config
+  

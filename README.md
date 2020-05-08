@@ -1,53 +1,95 @@
-# Udagram Image Filtering Microservice
+# Udagram Microservices
 
-Udagram is a simple cloud application developed alongside the Udacity Cloud Engineering Nanodegree. It allows users to register and log into a web client, post photos to the feed, and process photos using an image filtering microservice.
+Udagram is a simple cloud application developed alongside the [Udacity Cloud Engineering Nanodegree](https://www.udacity.com/course/cloud-developer-nanodegree--nd9990). It allows users to register and log into a web client, post photos to the feed, and process photos using an image filtering microservice.
 
-The project is split into three parts:
-1. [The Simple Frontend](/udacity-c3-frontend)
-A basic Ionic client web application which consumes the RestAPI Backend. 
-2. [The RestAPI Feed Backend](/udacity-c3-restapi-feed), a Node-Express feed microservice.
-3. [The RestAPI User Backend](/udacity-c3-restapi-user), a Node-Express user microservice.
+The project is split into four services:
 
-## Getting Setup
+1. [The Ionic Client](./udacity-c3-frontend/)
+A basic Ionic client web application which consumes the RestAPI Backend.
 
-> _tip_: this frontend is designed to work with the RestAPI backends). It is recommended you stand up the backend first, test using Postman, and then the frontend should integrate.
+2. [The User RESTful API Service](./udacity-c3-restapi-feed/), a Node-Express server which does user authentication and registration.
 
-### Installing Node and NPM
-This project depends on Nodejs and Node Package Manager (NPM). Before continuing, you must download and install Node (NPM is included) from [https://nodejs.com/en/download](https://nodejs.org/en/download/).
+3. [The Feed RESTful API Service](./udacity-c3-restapi-feed/), a Node-Express server which is used to list feeds and upload feed images to an AWS S3 bucket.
 
-### Installing Ionic Cli
-The Ionic Command Line Interface is required to serve and build the frontend. Instructions for installing the CLI can be found in the [Ionic Framework Docs](https://ionicframework.com/docs/installation/cli).
+4. [The Image Filtering RESTful API Service](./udacity-c3-image-filter/), a Node-Express server which runs a simple script to process images.
 
-### Installing project dependencies
+## Dockerhub Images
 
-This project uses NPM to manage software dependencies. NPM Relies on the package.json file located in the root of this repository. After cloning, open your terminal and run:
-```bash
-npm install
-```
->_tip_: **npm i** is shorthand for **npm install**
+- [The Ionic Client](https://hub.docker.com/repository/docker/ahmadelkhateeb/udacity-frontend)
+- [The Feed RESTful API](https://hub.docker.com/repository/docker/ahmadelkhateeb/udacity-rest-feed)
+- [The User RESTful API](https://hub.docker.com/repository/docker/ahmadelkhateeb/udacity-rest-user)
+- [The Nginx Reverse Proxy](https://hub.docker.com/repository/docker/ahmadelkhateeb/reverseproxy)
 
-### Setup Backend Node Environment
-You'll need to create a new node server. Open a new terminal within the project directory and run:
-1. Initialize a new project: `npm init`
-2. Install express: `npm i express --save`
-3. Install typescript dependencies: `npm i ts-node-dev tslint typescript  @types/bluebird @types/express @types/node --save-dev`
-4. Look at the `package.json` file from the RestAPI repo and copy the `scripts` block into the auto-generated `package.json` in this project. This will allow you to use shorthand commands like `npm run dev`
+## Starting the services as Docker containers locally
 
+- Replace the Dockerhub username ***ahmadelkhateeb*** with your own Dockerhub repository.
 
-### Configure The Backend Endpoint
-Ionic uses enviornment files located in `./src/enviornments/enviornment.*.ts` to load configuration variables at runtime. By default `environment.ts` is used for development and `enviornment.prod.ts` is used for produciton. The `apiHost` variable should be set to your server url either locally or in the cloud.
+- Since the `docker-compose` file uses environment variables, therefore you need to tell the system to use the environment variables from your `~/.profile` file using the command source `~/.profile`.
 
-***
-### Running the Development Server
-Ionic CLI provides an easy to use development server to run and autoreload the frontend. This allows you to make quick changes and see them in real time in your browser. To run the development server, open terminal and run:
+- Navigate to [udacity-c3-deployment/docker folder](./udacity-c3-deployment/docker/) and build the images for each of our defined services, using the command::
 
-```bash
-ionic serve
+```shell
+docker-compose -f docker-compose-build.yaml build --parallel
 ```
 
-### Building the Static Frontend Files
-Ionic CLI can build the frontend into static HTML/CSS/JavaScript files. These files can be uploaded to a host to be consumed by users on the web. Build artifacts are located in `./www`. To build from source, open terminal and run:
-```bash
-ionic build
+- To start the system, run a container for each of our defined services, in the de-attached mode:
+
+```shell
+docker-compose -f docker-compose up -d
 ```
-***
+
+- To see the list of running containers, run the command - `docker-compose ps`. You will see a list of container names, states, and ports listed.
+
+- Go to the browser and run [http://localhost:8100/](http://localhost:8100/) to see my Udagram application up and running with two functionalities: feed and user service. ***Feed service*** will allow the user to upload images and ***User service*** will allow a user to log-in or log-out from the system.
+
+- If you wish to stop the containers gracefully, use the below command:
+
+```shell
+docker-compose stop
+# To remove (and stop) the container
+docker-compose down
+```
+
+## Starting the app as a Kubernetes cluster locally
+
+- Replace the Dockerhub username ***ahmadelkhateeb*** with your own Dockerhub repository.
+
+- Replace all keys in the [env-configmap](./udacity-c3-deployment/k8s/env-configmap.yaml), [env-secret](./udacity-c3-deployment/k8s/env-secret.yaml) and [aws-secret](./udacity-c3-deployment/k8s/aws-secret.yaml) with your values.
+
+- To create K8s ***configMap***, ***secrets***, ***deployments*** and ***services*** use the below command:
+
+```shell
+kubectl apply -f udacity-c3-deployment/k8s --recursive
+```
+
+- Use Kubernetes port forwarding to see the application running, using the following command:
+
+```shell
+kubectl port-forward <reverseproxy-pod> 8080:8080
+kubectl port-forward <frontend-pod> 8100:80
+```
+
+- Go to the browser and run [http://localhost:8100/](http://localhost:8100/) to see my Udagram application up and running.
+
+## Links
+
+- [REST API server](http://a4328ed99607011eaaa110ae3011d93e-707550298.us-east-1.elb.amazonaws.com:8080/api/v0).
+- [Ionic client](http://a438417d2607011eaaa110ae3011d93e-1338661806.us-east-1.elb.amazonaws.com:8100).
+
+***Note***: You can find screenshots for the deployment [here](./screenshots/).
+
+## Resources
+
+- [How To Install Kubernetes On AWS Cluster Using KubeOne](https://github.com/kubermatic/kubeone/blob/master/docs/quickstart-aws.md).
+
+## Technologies
+
+- [Amazon Relational Database Service (RDS)](https://aws.amazon.com/rds/)
+- [Amazon Simple Cloud Storage Service (S3)](https://aws.amazon.com/s3/)
+- [Amazon Elastic Kubernetes Service (eks)](https://aws.amazon.com/eks/)
+- [Amazon CloudWatch](https://aws.amazon.com/cloudwatch/)
+- [Amamzon CloudFormation](https://aws.amazon.com/cloudformation/)
+- [Docker](https://www.docker.com/)
+- [Kuberentes (k8s)](https://kubernetes.io/)
+- [Travis CI](https://travis-ci.org/)
+- [Node.js](https://nodejs.org/)
