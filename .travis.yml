@@ -11,7 +11,7 @@ stages:
 env:
   global:
     - DOCKER_COMPOSE_VERSION=1.23.2
-    - CLUSTER_NAME=udagram-cluster
+    - CLUSTER_NAME=udagram
 
 before_install:
   - docker -v && docker-compose -v 
