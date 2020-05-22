@@ -8,13 +8,13 @@ clusters:
 - cluster:
     certificate-authority-data: ${TERRA_SERVER_AUTH}
     server: ${SERVER_URL}
-  name: udagram
+  name: udagram-cap
 contexts:
 - context:
-    cluster: udagram
+    cluster: udagram-cap
     user: kubernetes-admin
-  name: kubernetes-admin@udagram
-current-context: kubernetes-admin@udagram
+  name: kubernetes-admin@udagram-cap
+current-context: kubernetes-admin@udagram-cap
 kind: Config
 preferences: {}
 users:
