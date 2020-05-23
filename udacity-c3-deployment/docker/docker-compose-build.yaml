@@ -12,6 +12,10 @@ services:
     build:
       context: ../../udacity-c3-restapi-feed  
     image: ahmadelkhateeb/udacity-rest-feed
+  backend_filter:
+    build:
+      context: ../../udacity-c3-image-filter
+    image: ahmadelkhateeb/udacity-rest-image
   frontend:
     build:
       context: ../../udacity-c3-frontend  

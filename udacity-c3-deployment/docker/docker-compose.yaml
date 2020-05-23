@@ -7,7 +7,8 @@ services:
       restart: always
       depends_on:
         - backend-user
-        - backend-feed     
+        - backend-feed
+        - backend-image-filter    
   backend-user:
     image: ahmadelkhateeb/udacity-rest-user
     volumes:
@@ -35,6 +36,10 @@ services:
       AWS_PROFILE: $AWS_PROFILE 
       AWS_BUCKET: $AWS_BUCKET
       JWT_SECRET: $JWT_SECRET
+      URL: "http://localhost:8100"
+  backend-image-filter:
+    image: ahmadelkhateeb/udacity-rest-image
+    environment:
       URL: "http://localhost:8100"
   frontend:
     image: ahmadelkhateeb/udacity-frontend

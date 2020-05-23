@@ -13,6 +13,11 @@ A basic Ionic client web application which consumes the RestAPI Backend.
 
 4. [The Image Filtering RESTful API Service](./udacity-c3-image-filter/), a Node-Express server which runs a simple script to process images.
 
+How To Use The Image Filter
+Open your browser and enter :
+
+Link:{{port}}/filteredimage?image_url={{IMAGE_URL}}
+
 ## Dockerhub Images
 
 - [The Ionic Client](https://hub.docker.com/repository/docker/ahmadelkhateeb/udacity-frontend)
